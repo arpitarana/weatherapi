@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use PHPUnit\Runner\Exception;
 use Symfony\Component\HttpClient\HttpClient;
 
 class APIManager
