@@ -1,0 +1,198 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Musement API",
+		"description": "Musement API",
+		"termsOfService": "https://www.musement.com/",
+		"contact": {
+			"email": "support@musement.com"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		},
+		"version": "3.5.0"
+	},
+	"servers": [{
+			"url": "https://sandbox.musement.com/api/v3",
+			"description": "Sandbox server"
+		},
+		{
+			"url": "https://api.musement.com/api/v3",
+			"description": "Production server"
+		}
+	],
+	"paths": {
+		"/save-weather": {
+			"post": {
+				"summary": "save city weather data",
+				"operationId": "PostCityWeatherData",
+				"parameters": [{
+						"$ref": "#/components/parameters/X-Musement-Version"
+					},
+					{
+						"$ref": "#/components/parameters/Accept-Language"
+					}
+				],
+				"requestBody": {
+					"description": "save city weather information",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CityWeatherRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Returned when successful"
+					},
+					"503": {
+						"description": "Returned when the service is unavailable"
+					},
+					"400": {
+						"description": "Returned when the form has errors"
+					}
+				}
+			}
+		}
+	},
+	"/cities/{cityUuid}/weather/{date}|{day}": {
+		"get": {
+			"tags": [
+				"weather"
+			],
+			"summary": "Get weather for the City",
+			"operationId": "GetCitiesCityUuidWeather",
+			"parameters": [{
+					"$ref": "#/components/parameters/X-Musement-Version"
+				},
+				{
+					"$ref": "#/components/parameters/cityUuid"
+				},
+				{
+					"$ref": "#/components/parameters/date"
+				},
+				{
+					"$ref": "#/components/parameters/day"
+				}
+			],
+			"responses": {
+				"200": {
+					"description": "Returned when successful",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+									"$ref": "#/components/schemas/Weather"
+								}
+							}
+						}
+					}
+				},
+				"404": {
+					"description": "Returned when resource is not found"
+				},
+				"503": {
+					"description": "Returned when the service is unavailable"
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CityWeatherRequest": {
+				"required": [
+					"city",
+					"weather-type",
+					"date"
+				],
+				"properties": {
+					"city": {
+						"description": "City name",
+						"type": "string",
+						"example": "Ahmedabad"
+					},
+					"weather-type": {
+						"description": "Weather type",
+						"type": "string",
+						"example":
+							"Clear"|"Partly cloudy"|"Sunny"|"Overcast"
+					},
+					"date": {
+						"description": "Extra information about the error",
+						"type": "string",
+						"format": "date",
+						"example": "2020-12-25"
+					}
+				},
+				"type": "object"
+			}
+		},
+		"Weather": {
+			"properties": {
+				"type": {
+					"type": "string"
+				},
+				"date": {
+					"type": "string"
+				}
+			},
+			"type": "object",
+			"xml": {
+				"name": "Weather"
+			}
+		},
+		"parameter": {
+			"Accept-Language": {
+				"name": "Accept-Language",
+				"in": "header",
+				"required": false,
+				"schema": {
+					"type": "string",
+					"default": "en-US"
+				}
+			},
+			"X-Musement-Version": {
+				"name": "X-Musement-Version",
+				"in": "header",
+				"required": false,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"cityUuid": {
+				"name": "cityUuid",
+				"in": "path",
+				"description": "City UUID",
+				"required": true,
+				"schema": {
+					"type": "string"
+				}
+			},
+			"dt": {
+				"name": "dt",
+				"in": "path",
+				"description": "Date enter by user to get that day weather detail",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "date"
+				}
+			},
+			"day": {
+				"name": "day",
+				"in": "path",
+				"description": "Number of days of forecast required. between 1 to 10",
+				"required": true,
+				"schema": {
+					"type": "string",
+					"format": "date"
+				}
+			}
+		}
+	}
+}
