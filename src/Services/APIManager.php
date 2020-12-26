@@ -6,6 +6,18 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class APIManager
 {
+    public function getCities()
+    {
+        $httpClient = HttpClient::create();
+        $response = $httpClient->request('GET', 'https://api.musement.com/api/v3/cities');
+        if($response->getStatusCode() == 200) {
+            return json_decode($response->getContent(), true);
+        }
+        else {
+            return $response->getStatusCode();
+        }
+    }
+
     public function getAPIData($apiKey, $q, $days)
     {
         $httpClient = HttpClient::create();

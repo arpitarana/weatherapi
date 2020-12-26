@@ -19,14 +19,18 @@ class APIController extends AbstractController
     {
         $apiKey = $this->getParameter('api_key');
 
-        // Note for $cities variable here I have to use musement get cities but those are not working so I took static city array.
-        $cities = ['Paris', 'London'];
-        $formattedString = '';
-        foreach ($cities as $city) {
-            $cityForecastData = $APIManager->getAPIData($apiKey, $city, 2);
-            $formattedString .= $APIManager->getFormattedWeatherCityData($cityForecastData)."<br>";
-        }
+        $cities = $APIManager->getCities();
+        if($cities) {
+            $formattedString = '';
+            foreach ($cities as $city) {
+                $cityForecastData = $APIManager->getAPIData($apiKey, $city, 2);
+                $formattedString .= $APIManager->getFormattedWeatherCityData($cityForecastData) . "<br>";
+            }
 
-        return new Response($formattedString);
+            return new Response($formattedString);
+        }
+        else {
+            return new Response("No data proper!");
+        }
     }
 }
