@@ -14,9 +14,9 @@
 		"version": "3.5.0"
 	},
 	"servers": [{
-			"url": "https://sandbox.musement.com/api/v3",
-			"description": "Sandbox server"
-		},
+		"url": "https://sandbox.musement.com/api/v3",
+		"description": "Sandbox server"
+	},
 		{
 			"url": "https://api.musement.com/api/v3",
 			"description": "Production server"
@@ -28,8 +28,8 @@
 				"summary": "save city weather data",
 				"operationId": "PostCityWeatherData",
 				"parameters": [{
-						"$ref": "#/components/parameters/X-Musement-Version"
-					},
+					"$ref": "#/components/parameters/X-Musement-Version"
+				},
 					{
 						"$ref": "#/components/parameters/Accept-Language"
 					}
@@ -67,8 +67,8 @@
 			"summary": "Get weather for the City",
 			"operationId": "GetCitiesCityUuidWeather",
 			"parameters": [{
-					"$ref": "#/components/parameters/X-Musement-Version"
-				},
+				"$ref": "#/components/parameters/X-Musement-Version"
+			},
 				{
 					"$ref": "#/components/parameters/cityUuid"
 				},
@@ -119,8 +119,7 @@
 					"weather-type": {
 						"description": "Weather type",
 						"type": "string",
-						"example":
-							"Clear"|"Partly cloudy"|"Sunny"|"Overcast"
+						"example": "Clear|Partly cloudy|Sunny|Overcast"
 					},
 					"date": {
 						"description": "Extra information about the error",
