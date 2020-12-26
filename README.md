@@ -8,4 +8,4 @@ Note as mentioned in assignment "gets the list of the cities from Musement's API
 
 Step 2 | API design (no code required)
 
-Ths test you can found with file "step-2-api-design.json" which is in project direcotry itself.
+This test you can found with file "step-2-api-design.json" which is in project direcotry itself.
