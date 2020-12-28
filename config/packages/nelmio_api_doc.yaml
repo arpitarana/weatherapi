@@ -1,0 +1,144 @@
+nelmio_api_doc:
+    models: { use_jms: false }
+
+    media_types:
+        # Default:
+        - json
+        - xml
+    documentation:
+        info:
+            title: Musement API
+            description: A RestAPI for Manage Musement
+            version: 1.0.0
+
+        components:
+#            securitySchemes:
+#                Bearer:
+#                    type: http
+#                    scheme: bearer
+#                    bearerFormat: JWT
+            schemas:
+                CityWeatherRequest:
+                    required:
+                        - city
+                        - weather-type
+                        - date
+                    properties:
+                        city:
+                            description: "City name"
+                            type: string
+                            example: "Ahmedabad"
+                        weatherType:
+                            description: "Weather type"
+                            type: string
+                            example: "Clear|Partly cloudy|Sunny|Overcast"
+                        date:
+                            description: "Extra information about the error"
+                            type: string
+                            format: "date"
+                            example: "2020-12-25"
+                    type: object
+                Weather:
+                    properties:
+                        cityName:
+                            type: string
+                        weatherType:
+                            type: string
+                        date:
+                            type: string
+                    type: object
+                    xml:
+                        name: "Weather"
+            parameters:
+                cityUuid:
+                    name: "cityUuid"
+                    in: "path"
+                    description: "City UUID"
+                    required: true
+                    schema:
+                        type: "string"
+                dateOrDay:
+                    name: "dateOrDay"
+                    in: "path"
+                    description: "Number of days of forecast required. between 1 to 10 or date enter by user to get that day weather detail"
+                    required: true
+                    schema:
+                        type: "string"
+        security:
+            - Bearer: []
+        paths:
+            /save-weather:
+                post:
+                    tags:
+                        - Musement
+                    summary: save city weather data.
+                    requestBody:
+                        description: save city weather information
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/CityWeatherRequest"
+                    responses:
+                        '200':
+                            description: Returned when successful
+                        '503':
+                            description: Returned when the service is unavailable
+                        '400':
+                            description: Returned when the form has errors.
+            /cities/{cityUuid}/weather/{dateOrDay}:
+                get:
+                    tags:
+                        - Musement
+                    summary: "Get weather for the City"
+                    operationId: "GetCitiesCityUuidWeatherDateOrDay"
+                    parameters:
+                        - "ref": "#/components/parameters/cityUuid"
+                        - "ref": "#/components/parameters/dateOrDay"
+                    responses:
+                        '200':
+                            description: Returned when successful
+                            content:
+                                application/json:
+                                    schema:
+                                        type: "array"
+                                        items:
+                                            $ref: "#/components/schemas/Weather"
+                        '404':
+                            description: Returned when resource is not found
+                        '503':
+                            description: Returned when the service is unavailable.
+#            /api/token/refresh:
+#                post:
+#                    tags:
+#                        - Musement
+#                    summary: Login into the api by refresh token.
+#                    requestBody:
+#                        content:
+#                            application/json:
+#                                schema:
+#                                    properties:
+#                                        refresh_token:
+#                                            type: string
+#                                    type: object
+#                    responses:
+#                        '200':
+#                            description: OK
+#                            content:
+#                                application/json:
+#                                    schema:
+#                                        type: object
+#                                        properties:
+#                                            token:
+#                                                type: string
+#                                            refresh_token:
+#                                                type: string
+#                        '401':
+#                            description: An authentication exception occurred.
+#                    security: []
+
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!(/doc|/doc.json|/token/refresh)$)  
+
+

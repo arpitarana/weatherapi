@@ -2,45 +2,24 @@
 	"openapi": "3.0.0",
 	"info": {
 		"title": "Musement API",
-		"description": "Musement API",
-		"termsOfService": "https://www.musement.com/",
-		"contact": {
-			"email": "support@musement.com"
-		},
-		"license": {
-			"name": "Apache 2.0",
-			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-		},
-		"version": "3.5.0"
+		"description": "A RestAPI for Manage Musement",
+		"version": "1.0.0"
 	},
-	"servers": [{
-		"url": "https://sandbox.musement.com/api/v3",
-		"description": "Sandbox server"
-	},
-		{
-			"url": "https://api.musement.com/api/v3",
-			"description": "Production server"
-		}
-	],
 	"paths": {
-		"/save-weather": {
+		"\/save-weather": {
 			"post": {
-				"summary": "save city weather data",
-				"operationId": "PostCityWeatherData",
-				"parameters": [{
-					"$ref": "#/components/parameters/X-Musement-Version"
-				},
-					{
-						"$ref": "#/components/parameters/Accept-Language"
-					}
+				"tags": [
+					"Musement"
 				],
+				"summary": "save city weather data.",
+				"operationId": null,
 				"requestBody": {
 					"description": "save city weather information",
 					"required": true,
 					"content": {
-						"application/json": {
+						"application\/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CityWeatherRequest"
+								"$ref": "#\/components\/schemas\/CityWeatherRequest"
 							}
 						}
 					}
@@ -53,52 +32,65 @@
 						"description": "Returned when the service is unavailable"
 					},
 					"400": {
-						"description": "Returned when the form has errors"
+						"description": "Returned when the form has errors."
 					}
 				}
 			}
-		}
-	},
-	"/cities/{cityUuid}/weather/{date}|{day}": {
-		"get": {
-			"tags": [
-				"weather"
-			],
-			"summary": "Get weather for the City",
-			"operationId": "GetCitiesCityUuidWeather",
-			"parameters": [{
-				"$ref": "#/components/parameters/X-Musement-Version"
-			},
-				{
-					"$ref": "#/components/parameters/cityUuid"
-				},
-				{
-					"$ref": "#/components/parameters/date"
-				},
-				{
-					"$ref": "#/components/parameters/day"
-				}
-			],
-			"responses": {
-				"200": {
-					"description": "Returned when successful",
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "array",
-								"items": {
-									"$ref": "#/components/schemas/Weather"
+		},
+		"\/cities\/{cityUuid}\/weather\/{dateOrDay}": {
+			"get": {
+				"tags": [
+					"Musement"
+				],
+				"summary": "Get weather for the City",
+				"operationId": "GetCitiesCityUuidWeatherDateOrDay",
+				"parameters": [
+					{
+						"$ref": "#\/components\/parameters\/cityUuid"
+					},
+					{
+						"$ref": "#\/components\/parameters\/dateOrDay"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Returned when successful",
+						"content": {
+							"application\/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#\/components\/schemas\/Weather"
+									}
 								}
 							}
 						}
+					},
+					"404": {
+						"description": "Returned when resource is not found"
+					},
+					"503": {
+						"description": "Returned when the service is unavailable."
+					}
+				}
+			}
+		},
+		"\/api\/v1\/weather": {
+			"get": {
+				"tags": [
+					"Weather"
+				],
+				"operationId": null,
+				"responses": {
+					"201": {
+						"description": "Returns empty body with 201 status code"
 					}
 				},
-				"404": {
-					"description": "Returned when resource is not found"
-				},
-				"503": {
-					"description": "Returned when the service is unavailable"
-				}
+				"security": [
+					{
+						"Bearer": []
+					}
+				]
 			}
 		}
 	},
@@ -116,7 +108,7 @@
 						"type": "string",
 						"example": "Ahmedabad"
 					},
-					"weather-type": {
+					"weatherType": {
 						"description": "Weather type",
 						"type": "string",
 						"example": "Clear|Partly cloudy|Sunny|Overcast"
@@ -129,40 +121,26 @@
 					}
 				},
 				"type": "object"
-			}
-		},
-		"Weather": {
-			"properties": {
-				"type": {
-					"type": "string"
+			},
+			"Weather": {
+				"properties": {
+					"cityName": {
+						"type": "string"
+					},
+					"weatherType": {
+						"type": "string"
+					},
+					"date": {
+						"type": "string"
+					}
 				},
-				"date": {
-					"type": "string"
+				"type": "object",
+				"xml": {
+					"name": "Weather"
 				}
-			},
-			"type": "object",
-			"xml": {
-				"name": "Weather"
 			}
 		},
-		"parameter": {
-			"Accept-Language": {
-				"name": "Accept-Language",
-				"in": "header",
-				"required": false,
-				"schema": {
-					"type": "string",
-					"default": "en-US"
-				}
-			},
-			"X-Musement-Version": {
-				"name": "X-Musement-Version",
-				"in": "header",
-				"required": false,
-				"schema": {
-					"type": "string"
-				}
-			},
+		"parameters": {
 			"cityUuid": {
 				"name": "cityUuid",
 				"in": "path",
@@ -172,26 +150,20 @@
 					"type": "string"
 				}
 			},
-			"dt": {
-				"name": "dt",
+			"dateOrDay": {
+				"name": "dateOrDay",
 				"in": "path",
-				"description": "Date enter by user to get that day weather detail",
+				"description": "Number of days of forecast required. between 1 to 10 or date enter by user to get that day weather detail",
 				"required": true,
 				"schema": {
-					"type": "string",
-					"format": "date"
-				}
-			},
-			"day": {
-				"name": "day",
-				"in": "path",
-				"description": "Number of days of forecast required. between 1 to 10",
-				"required": true,
-				"schema": {
-					"type": "string",
-					"format": "date"
+					"type": "string"
 				}
 			}
 		}
-	}
+	},
+	"security": [
+		{
+			"Bearer": []
+		}
+	]
 }

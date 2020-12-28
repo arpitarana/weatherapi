@@ -1,0 +1,11 @@
+framework:
+  http_client:
+    scoped_clients:
+      weatherapi.client:
+        base_uri: 'http://api.weatherapi.com'
+        query:
+          key: '%api_key%'
+      musement.client:
+        base_uri: 'https://api.musement.com'
+        query:
+          key: '%api_key%'

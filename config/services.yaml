@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     api_key: 361ae81290834e5c84362746200612
+    http_cliient.cache.path: 
 
 services:
     # default configuration for services in *this* file
