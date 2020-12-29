@@ -17,14 +17,9 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 
 class WeatherController
 {
-    /**
-     * @var HttpClientInterface
-     */
-    private $weatherapiClient;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private HttpClientInterface $weatherapiClient;
+
+    private LoggerInterface $logger;
 
     public function __construct(HttpClientInterface $weatherapiClient, LoggerInterface $logger) {
         $this->weatherapiClient = $weatherapiClient;
@@ -46,9 +41,7 @@ class WeatherController
         // TODO we can use CachingHttpClient if cities are fixed
         try {
             $response = $musementClient->request('GET','/api/v3/cities');
-            $cities = array_map(function($city) {
-                return $city['name'];
-            }, json_decode($response->getContent(), true));
+            $cities = array_map(fn($city): string => $city['name'], json_decode($response->getContent(), true));
         } catch (ServerException | ClientExceptionInterface $e) {
             $this->logger->error('Error while fetching cities', [
                 'message' => $e->getMessage()

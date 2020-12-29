@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61a65d944778010bcb56543f7b2250e4",
+    "content-hash": "04322935f5286fd7a4eaf74dfa7c121d",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -249,16 +249,16 @@
         },
         {
             "name": "nelmio/api-doc-bundle",
-            "version": "v4.1.0",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "a9e8db4af0522588c40b0f52992995efc7beaa62"
+                "reference": "42365c71ccce25b3ab722fb736e1c733b26beb8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/a9e8db4af0522588c40b0f52992995efc7beaa62",
-                "reference": "a9e8db4af0522588c40b0f52992995efc7beaa62",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/42365c71ccce25b3ab722fb736e1c733b26beb8c",
+                "reference": "42365c71ccce25b3ab722fb736e1c733b26beb8c",
                 "shasum": ""
             },
             "require": {
@@ -277,7 +277,7 @@
                 "api-platform/core": "^2.4",
                 "doctrine/annotations": "^1.11",
                 "doctrine/common": "^2.4",
-                "friendsofsymfony/rest-bundle": "^2.8|^3.0@dev",
+                "friendsofsymfony/rest-bundle": "^2.8|^3.0",
                 "jms/serializer": "^1.14|^3.0",
                 "jms/serializer-bundle": "^2.3|^3.0",
                 "sensio/framework-extra-bundle": "^4.4|^5.0",
@@ -338,9 +338,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nelmio/NelmioApiDocBundle/issues",
-                "source": "https://github.com/nelmio/NelmioApiDocBundle/tree/v4.1.0"
+                "source": "https://github.com/nelmio/NelmioApiDocBundle/tree/v4.1.1"
             },
-            "time": "2020-12-10T22:00:21+00:00"
+            "time": "2020-12-27T18:14:14+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -4195,6 +4195,66 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.10.4"
             },
             "time": "2020-12-20T10:01:03+00:00"
+        },
+        {
+            "name": "phpstan/phpstan",
+            "version": "0.12.64",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.64"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-12-21T11:59:02+00:00"
         },
         {
             "name": "symfony/asset",
