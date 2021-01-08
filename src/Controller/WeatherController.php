@@ -7,14 +7,13 @@ use App\Serializer\WeatherNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use App\Services\WeatherManager;
 use App\Services\MusementCityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class WeatherController extends AbstractController
+class WeatherController
 {
     /**
      * @OA\Response(
@@ -26,7 +25,7 @@ class WeatherController extends AbstractController
      * @OA\Tag(name="Weather")
      * @Route("/weather", name="weather_index", methods={"GET"})
      */
-    public function index(WeatherManager $weatherManager, MusementCityManager $musementCityManager)
+    public function index(WeatherManager $weatherManager, MusementCityManager $musementCityManager, SerializerInterface $weatherSerializer)
     {
         $cities = $musementCityManager->getAllCities();
         if(!$cities) {
@@ -50,16 +49,9 @@ class WeatherController extends AbstractController
             );
         }
 
-        $serializer = new Serializer(
-            [new WeatherNormalizer()],
-            [new TextEncoder()]
-        );
-
         return new Response(
-            $serializer->serialize($data, 'text'),
+            $weatherSerializer->serialize($data, 'text'),
             Response::HTTP_OK
         );
     }
-
-    
 }

@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MusementCityManager
 {
-	private $musementClient;
+	private HttpClientInterface $musementClient;
 
-	private $logger;
+	private LoggerInterface $logger;
 
 	public function __construct(HttpClientInterface $musementClient, LoggerInterface $logger) {
         $this->musementClient = $musementClient;
