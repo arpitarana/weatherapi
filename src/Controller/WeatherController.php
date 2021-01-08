@@ -7,25 +7,15 @@ use App\Serializer\WeatherNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\HttpClient\Exception\ServerException;
-use Psr\Log\LoggerInterface;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use App\Services\WeatherManager;
+use App\Services\MusementCityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class WeatherController
+class WeatherController extends AbstractController
 {
-    private HttpClientInterface $weatherapiClient;
-
-    private LoggerInterface $logger;
-
-    public function __construct(HttpClientInterface $weatherapiClient, LoggerInterface $logger) {
-        $this->weatherapiClient = $weatherapiClient;
-        $this->logger = $logger;
-    }
-
     /**
      * @OA\Response(
      *     response=201,
@@ -36,36 +26,27 @@ class WeatherController
      * @OA\Tag(name="Weather")
      * @Route("/weather", name="weather_index", methods={"GET"})
      */
-    public function index(HttpClientInterface $musementClient): Response
+    public function index(WeatherManager $weatherManager, MusementCityManager $musementCityManager)
     {
-        // TODO we can use CachingHttpClient if cities are fixed
-        try {
-            $response = $musementClient->request('GET','/api/v3/cities');
-            $cities = array_map(fn($city): string => $city['name'], json_decode($response->getContent(), true));
-        } catch (ServerException | ClientExceptionInterface $e) {
-            $this->logger->error('Error while fetching cities', [
-                'message' => $e->getMessage()
-            ]);
-
-            return new JsonResponse(['message' => 'Service not available'], Response::HTTP_SERVICE_UNAVAILABLE);
-        }
-        
-        foreach ($cities as $city) {
-            $responses[] = $this->weatherapiClient->request('GET','/v1/forecast.json', [
-                'query' => [
-                    'q' => $city,
-                    'days' => 2
-                ]
-            ]);
+        $cities = $musementCityManager->getAllCities();
+        if(!$cities) {
+            return new JsonResponse(
+                [
+                    'errorCode' => Response::HTTP_NOT_FOUND,
+                    'message' => 'Cities not available'
+                ],
+                Response::HTTP_NOT_FOUND
+            );
         }
 
-        if (!$data = $this->processResponse($responses)) {
+        $data = $weatherManager->getForecastByCities($cities);
+        if (!$data) {
             return new JsonResponse(
                 [
                     'errorCode' => Response::HTTP_NOT_FOUND,
                     'message' => 'Weather not available'
                 ],
-            Response::HTTP_NOT_FOUND
+                Response::HTTP_NOT_FOUND
             );
         }
 
@@ -76,36 +57,9 @@ class WeatherController
 
         return new Response(
             $serializer->serialize($data, 'text'),
-            200
+            Response::HTTP_OK
         );
     }
 
-    /**
-     * @param array $responses
-     * @throws TransportExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     */
-    public function processResponse (array $responses): ?array
-    {
-        $data = [];
-        foreach ($this->weatherapiClient->stream($responses) as $response => $chunk) {
-            try {
-                if (200 !== $response->getStatusCode()) {
-                    $response->cancel();
-                    continue;
-                }
-                if ($chunk->isLast()) {
-                    $data[] = json_decode($response->getContent(), true);
-                }
-            } catch (\Exception $e) {
-                $this->logger->error(sprintf('Error while fetching %s city weather'), [
-                    'message' => $e->getMessage()
-                ]);
-            }
-        }
-
-        return $data;
-    }
+    
 }
